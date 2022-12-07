@@ -2,11 +2,9 @@ use std::fs;
 use std::env;
 use std::ops::{Index, IndexMut};
 use std::str;
-use std::fmt;
 
 #[derive(Debug)]
 struct Node {
-    idx: usize,
     name: String,
     size: u64,
     parent: Option<usize>,
@@ -14,9 +12,8 @@ struct Node {
 }
 
 impl Node {
-    fn new(idx: usize, name: &str, size: u64) -> Self {
+    fn new(name: &str, size: u64) -> Self {
         Self {
-            idx,
             name: String::from(name),
             size,
             parent: None,
@@ -33,13 +30,13 @@ struct Disk {
 impl Disk {
     fn new() -> Self {
         Self {
-            disk: vec![Node::new(0, "/", 0)]
+            disk: vec![Node::new("/", 0)]
         }
     }
 
     fn add(&mut self, parent: usize, name: &str, size: u64) -> usize {
         let idx = self.disk.len(); 
-        self.disk.push(Node::new(idx, name, size));
+        self.disk.push(Node::new(name, size));
         self.disk[idx].parent = Some(parent);
         self.disk[parent].children.push(idx);
         self.disk[parent].size += size;
@@ -56,13 +53,13 @@ impl Disk {
 
 impl Index<usize> for Disk {
     type Output = Node;
-    fn index<'a>(&'a self, i: usize) -> &'a Node {
+    fn index(& self, i: usize) -> &Node {
         &self.disk[i]
     }
 }
 
 impl IndexMut<usize> for Disk {
-    fn index_mut<'a>(&'a mut self, i: usize) -> &'a mut Node {
+    fn index_mut(&mut self, i: usize) -> &mut Node {
         &mut self.disk[i]
     }
 }
@@ -77,7 +74,7 @@ fn main() {
     let mut disk = Disk::new();
     
     for line in fs::read_to_string(&args[1]).unwrap().lines() {
-        let parts = line.split(" ").collect::<Vec<&str>>();
+        let parts = line.split(' ').collect::<Vec<&str>>();
         if parts[0] == "$" { // command
             if parts[1] == "cd" {
                 match parts[2] {
