@@ -23,9 +23,7 @@ fn simulate_rope_dynamics(input: &str, rope_len: usize) -> usize {
 
     input.lines().for_each(|line| {
         let parts: Vec<&str> = line.split(' ').collect();
-        //println!("{:?}", parts);
         for _ in 0..parts[1].parse::<usize>().unwrap() {
-
             match parts[0] {
                 "L" => rope[0].x -= 1,
                 "R" => rope[0].x += 1,
@@ -53,7 +51,6 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     assert_eq!(args.len(), 2, "Need to provide an input file as a second argument. \
                                Number of arguments is not 2");
-    
     
     let input = fs::read_to_string(&args[1]).unwrap();
 
